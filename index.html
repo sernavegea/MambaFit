@@ -641,16 +641,16 @@ function exportDay(dayKey, dateLabel){
   });
 
   const blocksHTML=blocksData.map(b=>`
-    <div style="margin-bottom:24px;border-radius:10px;overflow:hidden;border:1px solid #e0e0e0;box-shadow:0 1px 4px rgba(0,0,0,.06)">
-      <div style="background:${TYPE_BG[b.type]||'#f5f5f5'};padding:12px 18px;border-bottom:1px solid #e0e0e0;display:flex;align-items:center;gap:10px">
-        <span style="font-size:20px">${TYPE_EMOJI[b.type]||'📋'}</span>
-        <div>
-          <div style="font-family:'Courier New',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:${TYPE_COLOR_HEX[b.type]||'#555'};margin-bottom:2px">${typeLabel(b.type)}</div>
-          <div style="font-size:18px;font-weight:700;color:#111;letter-spacing:.5px">${b.name}</div>
+    <div class="block ${b.type}">
+      <div class="block-head">
+        <div class="block-emoji">${TYPE_EMOJI[b.type]||'📋'}</div>
+        <div class="block-meta">
+          <div class="block-type">${typeLabel(b.type)}</div>
+          <div class="block-name">${b.name}</div>
         </div>
       </div>
-      <div style="padding:16px 18px;background:#fff">
-        <pre style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;font-size:13px;line-height:1.8;color:#333;white-space:pre-wrap;margin:0">${(b.desc||'Sin contenido').replace(/</g,'&lt;')}</pre>
+      <div class="block-body">
+        <pre>${(b.desc||'Sin contenido').replace(/</g,'&lt;')}</pre>
       </div>
     </div>
   `).join('');
@@ -660,122 +660,52 @@ function exportDay(dayKey, dateLabel){
 <head>
 <meta charset="UTF-8">
 <title>Entreno – ${dateLabel}</title>
-<meta name="theme-color" content="#e91e8c">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="MAMBAFIT">
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-192.png">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  body{margin:0;padding:0;background:#f4f4f4;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif}
-  @media print{body{background:#fff}.no-print{display:none!important}@page{margin:18mm}}
-  .page{max-width:720px;margin:0 auto;padding:32px 24px}
-  .header{background:linear-gradient(135deg,#1a0010 0%,#2a0020 100%);color:#fff;padding:24px 28px;border-radius:12px;margin-bottom:28px;display:flex;align-items:center;justify-content:space-between}
-  .header-left h1{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;font-size:28px;font-weight:900;letter-spacing:2px;margin:0 0 4px;color:#fff;text-transform:uppercase}
-  .header-left p{font-family:'Courier New',monospace;font-size:11px;letter-spacing:1.5px;color:#999;margin:0;text-transform:uppercase}
-  .header-badge{background:#e91e8c;color:#fff;font-family:'Courier New',monospace;font-size:10px;letter-spacing:1px;padding:6px 12px;border-radius:20px;text-transform:uppercase}
-  .summary{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
-  .summary-pill{background:#fff;border:1px solid #e0e0e0;border-radius:20px;padding:5px 12px;font-family:'Courier New',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:#555;display:flex;align-items:center;gap:5px}
-  .print-btn{position:fixed;bottom:24px;right:24px;background:#1a0010;color:#fff;border:none;padding:12px 20px;border-radius:8px;font-family:'Courier New',monospace;font-size:11px;letter-spacing:1px;cursor:pointer;text-transform:uppercase;box-shadow:0 4px 12px rgba(0,0,0,.3)}
-  .print-btn:hover{background:#e91e8c}
-  .footer{text-align:center;font-family:'Courier New',monospace;font-size:9px;color:#bbb;letter-spacing:1px;margin-top:32px;padding-top:16px;border-top:1px solid #e0e0e0}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#fff;color:#111;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:0}
+  @media print{.no-print{display:none!important}@page{margin:15mm}}
+  .page{max-width:680px;margin:0 auto;padding:28px 20px}
+  .doc-header{background:linear-gradient(135deg,#1a0010 0%,#3a0025 100%);color:#fff;padding:22px 24px;border-radius:10px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between}
+  .doc-header h1{font-size:26px;font-weight:900;letter-spacing:2px;text-transform:uppercase;margin-bottom:3px}
+  .doc-header p{font-size:11px;letter-spacing:1px;color:#cc88bb;text-transform:uppercase}
+  .doc-badge{background:#e91e8c;color:#fff;font-size:10px;letter-spacing:1px;padding:5px 12px;border-radius:20px;text-transform:uppercase;white-space:nowrap}
+  .summary{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
+  .pill{background:#f5f5f5;border:1px solid #e0e0e0;border-radius:20px;padding:4px 10px;font-size:10px;letter-spacing:.5px;text-transform:uppercase;color:#555;display:flex;align-items:center;gap:4px}
+  .block{margin-bottom:20px;border-radius:8px;overflow:hidden;border:1px solid #e8e8e8}
+  .block-head{padding:11px 16px;display:flex;align-items:center;gap:10px}
+  .block-emoji{font-size:18px;line-height:1}
+  .block-meta{}
+  .block-type{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;margin-bottom:2px}
+  .block-name{font-size:17px;font-weight:700;letter-spacing:.3px;color:#111}
+  .block-body{padding:14px 16px;background:#fff;border-top:1px solid #e8e8e8}
+  .block-body pre{font-family:inherit;font-size:13px;line-height:1.8;color:#333;white-space:pre-wrap;word-break:break-word}
+  .warmup .block-head{background:#fff8e6} .warmup .block-type{color:#b8860b}
+  .gymnastic .block-head{background:#e8fff8} .gymnastic .block-type{color:#0a7a5a}
+  .weightlifting .block-head{background:#f5eeff} .weightlifting .block-type{color:#6a3a9a}
+  .wod .block-head{background:#fff0ee} .wod .block-type{color:#b03000}
+  .conditioning .block-head{background:#e8f5ff} .conditioning .block-type{color:#0a6a9a}
+  .accesorios .block-head{background:#f0ffe8} .accesorios .block-type{color:#3a6a0a}
+  .footer{text-align:center;font-size:9px;color:#bbb;letter-spacing:1px;margin-top:28px;padding-top:14px;border-top:1px solid #eee;text-transform:uppercase}
+  .print-btn{position:fixed;bottom:20px;right:20px;background:#e91e8c;color:#fff;border:none;padding:12px 20px;border-radius:8px;font-size:12px;letter-spacing:1px;cursor:pointer;text-transform:uppercase;box-shadow:0 4px 16px rgba(233,30,140,.4);font-weight:600}
+  .print-btn:hover{background:#c4007a}
 </style>
 </head>
 <body>
 <div class="page">
-  <div class="header">
-    <div class="header-left">
-      <h1>ENTRENAMIENTO</h1>
+  <div class="doc-header">
+    <div>
+      <h1>Entrenamiento</h1>
       <p>${dateLabel}</p>
     </div>
-    <div class="header-badge">${blocksData.length} bloque${blocksData.length!==1?'s':''}</div>
+    <div class="doc-badge">${blocksData.length} bloque${blocksData.length!==1?'s':''}</div>
   </div>
   <div class="summary">
-    ${blocksData.map(b=>`<div class="summary-pill"><span>${TYPE_EMOJI[b.type]||'📋'}</span>${typeLabel(b.type)}</div>`).join('')}
+    ${blocksData.map(b=>`<div class="pill"><span>${TYPE_EMOJI[b.type]||'📋'}</span>${typeLabel(b.type)}</div>`).join('')}
   </div>
   ${blocksHTML}
   <div class="footer">MAMBAFIT · Generado el ${new Date().toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'})}</div>
 </div>
-<button class="print-btn no-print" onclick="window.print()">🖨 Imprimir / Guardar PDF</button>
-
-<!-- MODAL: EDIT PLAN ITEM -->
-<div class="modal-overlay" id="modal-edit-plan">
-  <div class="modal" style="width:540px">
-    <button class="modal-close" onclick="closeModal('modal-edit-plan')">✕</button>
-    <div class="modal-title">EDITAR BLOQUE</div>
-    <div class="form-group">
-      <label class="form-label">Nombre</label>
-      <input class="form-input" type="text" id="ep-name" placeholder="Nombre del bloque">
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Tipo</label>
-        <select class="form-select" id="ep-type">
-          <option value="warmup">Warm Up</option>
-          <option value="gymnastic">Gymnastic / Skill</option>
-          <option value="weightlifting">Weightlifting</option>
-          <option value="wod">WOD / Metcon</option>
-          <option value="conditioning">Conditioning</option>
-          <option value="accesorios">Accesorios</option>
-        </select>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Contenido</label>
-      <textarea class="form-textarea" id="ep-desc" style="min-height:160px" placeholder="Ejercicios, series, reps, notas libres..."></textarea>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('modal-edit-plan')">Cancelar</button>
-      <button class="btn btn-primary" onclick="savePlanItemEdit()">Guardar</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL: ADD FREE BLOCK TO DAY -->
-<div class="modal-overlay" id="modal-free-block">
-  <div class="modal" style="width:540px">
-    <button class="modal-close" onclick="closeModal('modal-free-block')">✕</button>
-    <div class="modal-title">AÑADIR BLOQUE LIBRE</div>
-    <div class="modal-sub" id="free-block-day-label" style="font-family:DM Mono,monospace;font-size:10px;color:var(--muted);margin-bottom:14px;letter-spacing:1px;text-transform:uppercase"></div>
-    <div class="form-group">
-      <label class="form-label">Nombre</label>
-      <input class="form-input" type="text" id="fb-name" placeholder="Ej: Charla técnica, Fuerza libre...">
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Tipo</label>
-        <select class="form-select" id="fb-type">
-          <option value="warmup">Warm Up</option>
-          <option value="gymnastic">Gymnastic / Skill</option>
-          <option value="weightlifting">Weightlifting</option>
-          <option value="wod">WOD / Metcon</option>
-          <option value="conditioning">Conditioning</option>
-          <option value="accesorios">Accesorios</option>
-        </select>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Contenido</label>
-      <textarea class="form-textarea" id="fb-desc" style="min-height:160px" placeholder="Describe el entreno libremente..."></textarea>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('modal-free-block')">Cancelar</button>
-      <button class="btn btn-primary" onclick="saveFreeBlock()">Añadir al día</button>
-    </div>
-  </div>
-</div>
-
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js')
-      .then(r => console.log('SW registered'))
-      .catch(e => console.log('SW error', e));
-  });
-}
-<\/script>
+<button class="print-btn no-print" onclick="window.print()">🖨 Imprimir / PDF</button>
 </body>
 </html>`;
 

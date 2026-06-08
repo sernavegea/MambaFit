@@ -709,17 +709,11 @@ function exportDay(dayKey, dateLabel){
 </body>
 </html>`;
 
-  // Download as HTML file instead of opening new window (works in PWA)
+  // Open in new tab
   const blob = new Blob([html], {type: 'text/html;charset=utf-8'});
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  const safeName = dateLabel.replace(/[^a-z0-9]/gi, '_').toLowerCase();
-  a.download = 'mambafit_' + safeName + '.html';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  window.open(url, '_blank');
+  setTimeout(() => URL.revokeObjectURL(url), 10000);
 }
 
 

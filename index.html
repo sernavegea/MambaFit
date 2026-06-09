@@ -444,8 +444,9 @@ function openDetail(id){
       ${b.timecap?`<div style="display:inline-flex;align-items:center;gap:4px;background:rgba(233,30,140,.12);border:1px solid rgba(233,30,140,.3);border-radius:4px;padding:2px 8px;font-family:'DM Mono',monospace;font-size:10px;color:var(--cf)">⏱ TIME CAP ${b.timecap}</div>`:''}
     </div>
     <div class="drawer-body">${(b.desc||'Sin contenido').replace(/</g,'&lt;')}</div>
-    <div class="drawer-actions">
+    <div class="drawer-actions" style="flex-wrap:wrap;gap:6px">
       <button class="btn btn-primary btn-sm" onclick="openPlanDayModal('${b.id}');closeDrawer()">＋ Planificar</button>
+      <button class="btn btn-ghost btn-sm" onclick="closeDrawer();saveBlockCopyToDB('${b.id}')">＋ Guardar en BD</button>
       ${isCustom?`<button class="btn btn-ghost btn-sm" onclick="openEditModal('${b.id}');closeDrawer()">Editar</button>
       <button class="btn btn-ghost btn-sm" onclick="deleteBlock('${b.id}');closeDrawer()">Eliminar</button>`:''}
     </div>
@@ -869,6 +870,29 @@ function resetAndSavePlan(dayKey, idx) {
   save();
   renderPlanner();
   showToast('Restaurado al original');
+}
+
+function saveBlockCopyToDB(blockId) {
+  const b = getAllBlocks().find(x => x.id === blockId);
+  if (!b) return;
+  // Check if it's already a custom block
+  if (customBlocks.find(x => x.id === blockId)) {
+    showToast('Ya está en tu base de datos');
+    return;
+  }
+  const newBlock = {
+    id: uid(),
+    name: b.name,
+    type: b.type,
+    desc: b.desc || '',
+    timecap: b.timecap || null,
+    date: Date.now(),
+    source_date: b.source_date || '',
+    source: 'Personalizado'
+  };
+  customBlocks.unshift(newBlock);
+  save();
+  showToast('Guardado en la base de datos ✓');
 }
 
 function saveCurrentPlanToDB(dayKey, idx) {

@@ -246,7 +246,7 @@ nav button.active{color:var(--text);background:var(--s3);border:1px solid var(--
 
     <!-- DETAIL VIEW -->
     <div id="view-detail" class="view">
-      <button class="detail-back" onclick="showView('db',document.querySelector('nav button'))">← Volver</button>
+      <button class="detail-back" onclick="showView('db',document.querySelector('nav button'),true)">← Volver</button>
       <div id="detail-content"></div>
     </div>
 
@@ -340,12 +340,19 @@ function typeLabel(t){return{warmup:'Warm Up',gymnastic:'Gymnastic',weightliftin
 const TYPE_COLOR = {warmup:'var(--warmup)',gymnastic:'var(--gym)',weightlifting:'var(--wl)',wod:'var(--wod)',conditioning:'var(--cond)',accesorios:'var(--ac)'};
 
 // ---- VIEW NAV ----
-function showView(v, btn) {
+function showView(v, btn, restoreScroll) {
   document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
   document.getElementById('view-'+v).classList.add('active');
   if(btn) btn.classList.add('active');
-  if(v==='db') renderDB();
+  if(v==='db') {
+    renderDB();
+    if(restoreScroll) {
+      requestAnimationFrame(() => {
+        document.querySelector('.content').scrollTop = _savedScrollTop;
+      });
+    }
+  }
   if(v==='planner') renderPlanner();
 }
 function filterCat(cat,btn){currentCat=cat;document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderDB()}
@@ -394,9 +401,12 @@ function renderDB(){
 }
 
 // ---- DETAIL ----
+let _savedScrollTop = 0;
 function openDetail(id){
   const b=getAllBlocks().find(x=>x.id===id);
   if(!b) return;
+  // Save scroll position of content area
+  _savedScrollTop = document.querySelector('.content').scrollTop;
   document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
   document.getElementById('view-detail').classList.add('active');
   document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));

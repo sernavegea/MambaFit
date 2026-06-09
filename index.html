@@ -164,6 +164,20 @@ nav button.active{color:var(--text);background:var(--s3);border:1px solid var(--
 .plan-item.dragging{opacity:.4}
 .plan-item.drag-over{border-top:2px solid var(--cf)}
 
+
+/* ---- DETAIL DRAWER ---- */
+.drawer-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;backdrop-filter:blur(3px)}
+.drawer-overlay.open{display:block}
+.drawer{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-radius:16px 16px 0 0;border-top:1px solid var(--b2);z-index:301;max-height:90vh;overflow-y:auto;transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.drawer.open{transform:translateY(0)}
+.drawer-handle{width:36px;height:4px;background:var(--b2);border-radius:2px;margin:12px auto 0;cursor:pointer}
+.drawer-inner{padding:16px 20px 32px}
+.drawer-tags{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;align-items:center}
+.drawer-name{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:2px;line-height:1;margin-bottom:6px}
+.drawer-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.drawer-body{background:var(--s2);border:1px solid var(--border);border-radius:7px;padding:16px;font-size:13px;line-height:1.8;color:var(--dim);white-space:pre-wrap;margin-bottom:16px;word-break:break-word}
+.drawer-actions{display:flex;gap:8px}
+
 /* ---- PRINT STYLES ---- */
 @media print{
   body{background:#fff;color:#000;font-family:'DM Sans',sans-serif}
@@ -246,7 +260,7 @@ nav button.active{color:var(--text);background:var(--s3);border:1px solid var(--
 
     <!-- DETAIL VIEW -->
     <div id="view-detail" class="view">
-      <button class="detail-back" onclick="showView('db',document.querySelector('nav button'),true)">← Volver</button>
+      <button class="detail-back" onclick="closeDrawer()">← Volver</button>
       <div id="detail-content"></div>
     </div>
 
@@ -415,31 +429,38 @@ function renderDB(){
 }
 
 // ---- DETAIL ----
-let _savedScrollTop = 0;
-let _lastDetailId = null;
 function openDetail(id){
   const b=getAllBlocks().find(x=>x.id===id);
   if(!b) return;
-  _lastDetailId = id;
-  // Save scroll on all possible scroll containers
-  _savedScrollTop = window.scrollY || document.documentElement.scrollTop || document.querySelector('.content').scrollTop || 0;
-  document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
-  document.getElementById('view-detail').classList.add('active');
-  document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
-  document.querySelector('nav button').classList.add('active');
-  document.getElementById('detail-content').innerHTML=`
-    <span class="tag tag-${b.type}" style="font-size:9px">${typeLabel(b.type)}</span>
-    <div class="detail-name">${b.name}</div>
-    ${b.source_date?`<div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:6px">${b.source_date}</div>`:''}
-    ${b.timecap?`<div style="display:inline-flex;align-items:center;gap:4px;background:rgba(233,30,140,.12);border:1px solid rgba(233,30,140,.3);border-radius:4px;padding:3px 10px;font-family:'DM Mono',monospace;font-size:10px;color:var(--cf);margin-bottom:8px">⏱ TIME CAP ${b.timecap}</div><br>`:''}
-    <div style="display:flex;gap:8px;margin:10px 0">
-      <button class="btn btn-primary btn-sm" onclick="openPlanDayModal('${b.id}')">＋ Planificar</button>
-      ${customBlocks.find(x=>x.id===id)?`<button class="btn btn-ghost btn-sm" onclick="openEditModal('${b.id}')">Editar</button>
-      <button class="btn btn-ghost btn-sm" onclick="deleteBlock('${b.id}')">Eliminar</button>`:''}
+  const isCustom = !!customBlocks.find(x=>x.id===id);
+  document.getElementById('drawer-inner').innerHTML=`
+    <div class="drawer-tags">
+      <span class="tag tag-${b.type}">${typeLabel(b.type)}</span>
+      ${b.source&&b.source!=='Kalsubox'?`<span class="tag" style="background:rgba(0,255,180,.1);color:var(--gym)">${b.source}</span>`:''}
     </div>
-    <div class="detail-body">${(b.desc||'').replace(/</g,'&lt;')}</div>
+    <div class="drawer-name">${b.name}</div>
+    <div class="drawer-meta">
+      ${b.source_date?`<span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">${b.source_date}</span>`:''}
+      ${b.timecap?`<div style="display:inline-flex;align-items:center;gap:4px;background:rgba(233,30,140,.12);border:1px solid rgba(233,30,140,.3);border-radius:4px;padding:2px 8px;font-family:'DM Mono',monospace;font-size:10px;color:var(--cf)">⏱ TIME CAP ${b.timecap}</div>`:''}
+    </div>
+    <div class="drawer-body">${(b.desc||'Sin contenido').replace(/</g,'&lt;')}</div>
+    <div class="drawer-actions">
+      <button class="btn btn-primary btn-sm" onclick="openPlanDayModal('${b.id}');closeDrawer()">＋ Planificar</button>
+      ${isCustom?`<button class="btn btn-ghost btn-sm" onclick="openEditModal('${b.id}');closeDrawer()">Editar</button>
+      <button class="btn btn-ghost btn-sm" onclick="deleteBlock('${b.id}');closeDrawer()">Eliminar</button>`:''}
+    </div>
   `;
+  document.getElementById('detail-drawer').classList.add('open');
+  document.getElementById('drawer-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
 }
+
+function closeDrawer(){
+  document.getElementById('detail-drawer').classList.remove('open');
+  document.getElementById('drawer-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+
 
 // ---- ADD/EDIT ----
 function openAddModal(){
@@ -739,6 +760,13 @@ function exportDay(dayKey, dateLabel){
   <div class="footer">MAMBAFIT · Generado el ${new Date().toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'})}</div>
 </div>
 <button class="print-btn no-print" onclick="window.print()">🖨 Imprimir / PDF</button>
+
+<!-- DETAIL DRAWER -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="detail-drawer">
+  <div class="drawer-handle" onclick="closeDrawer()"></div>
+  <div class="drawer-inner" id="drawer-inner"></div>
+</div>
 </body>
 </html>`;
 
@@ -935,5 +963,12 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
+
+<!-- DETAIL DRAWER -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="detail-drawer">
+  <div class="drawer-handle" onclick="closeDrawer()"></div>
+  <div class="drawer-inner" id="drawer-inner"></div>
+</div>
 </body>
 </html>

@@ -346,12 +346,16 @@ function showView(v, btn, restoreScroll) {
   document.getElementById('view-'+v).classList.add('active');
   if(btn) btn.classList.add('active');
   if(v==='db') {
-    renderDB();
-    if(restoreScroll) {
+    if(!restoreScroll) {
+      // Full re-render only when navigating fresh (not coming back from detail)
+      renderDB();
+    }
+    // Restore scroll position
+    requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         document.querySelector('.content').scrollTop = _savedScrollTop;
       });
-    }
+    });
   }
   if(v==='planner') renderPlanner();
 }

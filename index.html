@@ -830,12 +830,65 @@ function openPlanDetail(dayKey, idx) {
   const name = entry.customName || (b ? b.name : entry.name || '?');
   const type = entry.customType || (b ? b.type : entry.type || 'wod');
   const desc = entry.customDesc !== undefined ? entry.customDesc : (b ? (b.desc || '') : '');
-  if (b && !entry.customName && !entry.customDesc) {
-    openDetail(b.id);
-  } else {
-    // show inline detail
-    openEditPlanItem(dayKey, idx);
-  }
+  const tc = entry.customTimecap !== undefined ? entry.customTimecap : (b ? (b.timecap || null) : null);
+  const hasEdits = !!(entry.customName || entry.customDesc !== undefined);
+
+  // Always show plan drawer with edit options
+  document.getElementById('drawer-inner').innerHTML = `
+    <div class="drawer-tags">
+      <span class="tag tag-${type}">${typeLabel(type)}</span>
+      ${hasEdits ? `<span class="tag" style="background:rgba(233,30,140,.1);color:var(--cf)">Editado</span>` : ''}
+    </div>
+    <div class="drawer-name">${name}</div>
+    <div class="drawer-meta">
+      ${b && b.source_date ? `<span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">${b.source_date}</span>` : ''}
+      ${tc ? `<div style="display:inline-flex;align-items:center;gap:4px;background:rgba(233,30,140,.12);border:1px solid rgba(233,30,140,.3);border-radius:4px;padding:2px 8px;font-family:'DM Mono',monospace;font-size:10px;color:var(--cf)">⏱ TIME CAP ${tc}</div>` : ''}
+    </div>
+    <div class="drawer-body">${(desc || (b ? b.desc : '') || 'Sin contenido').replace(/</g,'&lt;')}</div>
+    <div class="drawer-actions" style="flex-wrap:wrap">
+      <button class="btn btn-primary btn-sm" onclick="closeDrawer();openEditPlanItem('${dayKey}',${idx})">✏ Editar en planificación</button>
+      ${hasEdits ? `<button class="btn btn-ghost btn-sm" onclick="closeDrawer();resetAndSavePlan('${dayKey}',${idx})">↺ Restaurar original</button>` : ''}
+      <button class="btn btn-ghost btn-sm" onclick="closeDrawer();saveCurrentPlanToDB('${dayKey}',${idx})">＋ Guardar en BD</button>
+    </div>
+  `;
+  document.getElementById('detail-drawer').classList.add('open');
+  document.getElementById('drawer-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function resetAndSavePlan(dayKey, idx) {
+  const items = planner[dayKey] || [];
+  const entry = items[idx];
+  if (!entry) return;
+  delete entry.customName;
+  delete entry.customDesc;
+  delete entry.customType;
+  delete entry.customTimecap;
+  const b = getAllBlocks().find(x => x.id === entry.id);
+  if (b) { entry.name = b.name; entry.type = b.type; }
+  save();
+  renderPlanner();
+  showToast('Restaurado al original');
+}
+
+function saveCurrentPlanToDB(dayKey, idx) {
+  const entry = (planner[dayKey] || [])[idx];
+  if (!entry) return;
+  const b = getAllBlocks().find(x => x.id === entry.id);
+  const name = entry.customName || (b ? b.name : entry.name || '');
+  const type = entry.customType || (b ? b.type : entry.type || 'wod');
+  const desc = entry.customDesc !== undefined ? entry.customDesc : (b ? (b.desc || '') : '');
+  const tc = entry.customTimecap !== undefined ? entry.customTimecap : (b ? (b.timecap || null) : null);
+  const newBlock = {
+    id: uid(), name, type, desc,
+    timecap: tc || null,
+    date: Date.now(),
+    source_date: '',
+    source: 'Personalizado'
+  };
+  customBlocks.unshift(newBlock);
+  save();
+  showToast('Guardado en la base de datos ✓');
 }
 
 function savePlanItemEdit() {

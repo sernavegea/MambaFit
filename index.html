@@ -346,16 +346,26 @@ function showView(v, btn, restoreScroll) {
   document.getElementById('view-'+v).classList.add('active');
   if(btn) btn.classList.add('active');
   if(v==='db') {
-    if(!restoreScroll) {
-      // Full re-render only when navigating fresh (not coming back from detail)
-      renderDB();
-    }
-    // Restore scroll position
-    requestAnimationFrame(() => {
+    renderDB();
+    if(restoreScroll && _lastDetailId) {
+      // Scroll the card we came from into view
       requestAnimationFrame(() => {
-        document.querySelector('.content').scrollTop = _savedScrollTop;
+        requestAnimationFrame(() => {
+          const card = document.querySelector('.block-card[data-id="' + _lastDetailId + '"]');
+          if(card) {
+            card.scrollIntoView({block:'center', behavior:'instant'});
+            // Highlight briefly
+            card.style.outline = '2px solid var(--cf)';
+            setTimeout(() => card.style.outline = '', 1200);
+          } else {
+            // Fallback: restore saved scroll
+            const content = document.querySelector('.content');
+            if(content) content.scrollTop = _savedScrollTop;
+            window.scrollTo(0, _savedScrollTop);
+          }
+        });
       });
-    });
+    }
   }
   if(v==='planner') renderPlanner();
 }
@@ -383,7 +393,7 @@ function renderDB(){
     return;
   }
   grid.innerHTML=filtered.slice(0,200).map(b=>`
-    <div class="block-card" data-type="${b.type}" onclick="openDetail('${b.id}')">
+    <div class="block-card" data-type="${b.type}" data-id="${b.id}" onclick="openDetail('${b.id}')">
       <div class="card-top">
         <span class="tag tag-${b.type}">${typeLabel(b.type)}</span>
         <div class="card-actions">
@@ -406,11 +416,13 @@ function renderDB(){
 
 // ---- DETAIL ----
 let _savedScrollTop = 0;
+let _lastDetailId = null;
 function openDetail(id){
   const b=getAllBlocks().find(x=>x.id===id);
   if(!b) return;
-  // Save scroll position of content area
-  _savedScrollTop = document.querySelector('.content').scrollTop;
+  _lastDetailId = id;
+  // Save scroll on all possible scroll containers
+  _savedScrollTop = window.scrollY || document.documentElement.scrollTop || document.querySelector('.content').scrollTop || 0;
   document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
   document.getElementById('view-detail').classList.add('active');
   document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));

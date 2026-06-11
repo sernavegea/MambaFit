@@ -233,7 +233,7 @@ nav button.active{color:var(--text);background:var(--s3);border:1px solid var(--
         <button class="btn btn-primary" onclick="openAddModal()">+ Añadir</button>
       </div>
       <div class="filter-bar">
-        <input class="search-input" type="text" placeholder="Buscar bloque..." id="search-inp" oninput="renderDB()">
+        <input class="search-input" type="text" placeholder="Buscar bloque..." id="search-inp" oninput="dbPage=1;renderDB()">
         <select class="filter-select" id="sort-sel" onchange="renderDB()">
           <option value="newest">Más recientes</option>
           <option value="oldest">Más antiguos</option>
@@ -343,7 +343,7 @@ function save() {
 function uid() { return Math.random().toString(36).slice(2,10); }
 
 // ---- FILTERS ----
-let currentCat = 'all', currentType = 'all', editingId = null;
+let currentCat = 'all', currentType = 'all', editingId = null, dbPage = 1;
 const CAT_TYPES = {
   cf:['warmup','gymnastic','weightlifting','wod'],
   hy:['warmup','conditioning'],
@@ -383,8 +383,8 @@ function showView(v, btn, restoreScroll) {
   }
   if(v==='planner') renderPlanner();
 }
-function filterCat(cat,btn){currentCat=cat;document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderDB()}
-function filterType(t,btn){currentType=t;document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderDB()}
+function filterCat(cat,btn){currentCat=cat;dbPage=1;document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderDB()}
+function filterType(t,btn){currentType=t;dbPage=1;document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderDB()}
 
 // ---- DB RENDER ----
 function renderDB(){
@@ -425,7 +425,17 @@ function renderDB(){
       <div class="card-desc">${(b.desc||'').replace(/</g,'&lt;')}</div>
     </div>
   `).join('');
-  if(filtered.length>200) grid.innerHTML+=`<div class="empty" style="grid-column:1/-1"><div class="empty-sub">Mostrando 200 de ${filtered.length}. Usa el buscador para filtrar.</div></div>`;
+  if(hasMore) {
+    const remaining = filtered.length - pageItems.length;
+    grid.innerHTML += `<div style="grid-column:1/-1;text-align:center;padding:20px 0">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:10px;letter-spacing:1px">${pageItems.length} de ${filtered.length} entrenos</div>
+      <button onclick="dbPage++;renderDB()" style="background:var(--s2);border:1px solid var(--b2);color:var(--text);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;padding:10px 24px;border-radius:6px;cursor:pointer;transition:all .15s" onmouseover="this.style.borderColor='var(--cf)'" onmouseout="this.style.borderColor='var(--b2)'">
+        VER MÁS (${remaining} restantes)
+      </button>
+    </div>`;
+  } else if(filtered.length > 100) {
+    grid.innerHTML += `<div style="grid-column:1/-1;text-align:center;padding:12px 0;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px">${filtered.length} entrenos · todo cargado</div>`;
+  }
 }
 
 // ---- DETAIL ----

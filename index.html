@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MAMBAFIT</title>
-<meta name="theme-color" content="#e91e8c">
+<meta name="theme-color" content="#d4af37">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -13,11 +13,12 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0a0a0a;--surface:#121212;--s2:#1a1a1a;--s3:#222;--border:#2a2a2a;--b2:#333;--text:#f0f0f0;--muted:#666;--dim:#999;--cf:#e91e8c;--hy:#00c2ff;--ac:#b8ff00;--warmup:#ffc800;--gym:#00ffb4;--wl:#b464ff;--wod:#e91e8c;--cond:#00c2ff;--r:6px}
+:root{--bg:#0a0a0a;--surface:#121212;--s2:#1a1a1a;--s3:#222;--border:#2a2a2a;--b2:#333;--text:#f0f0f0;--muted:#666;--dim:#999;--cf:#d4af37;--hy:#00c2ff;--ac:#b8ff00;--warmup:#ffc800;--gym:#00ffb4;--wl:#b464ff;--wod:#d4af37;--cond:#00c2ff;--r:6px}
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;display:flex;flex-direction:column}
-header{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:52px;border-bottom:1px solid rgba(233,30,140,.2);background:linear-gradient(180deg,#1a0010 0%,#141414 100%);position:sticky;top:0;z-index:100}
-.logo{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;color:#f5f0f3}.logo span{color:var(--cf);text-shadow:0 0 12px rgba(233,30,140,.6)}
+header{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:52px;border-bottom:1px solid rgba(212,175,55,.25);background:linear-gradient(180deg,#1a1606 0%,#151310 100%);position:sticky;top:0;z-index:100}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;color:#f5f0e0}.logo span{color:var(--cf);text-shadow:0 0 12px rgba(212,175,55,.6)}
+.logo-img{height:38px;width:auto;display:block;filter:drop-shadow(0 0 6px rgba(212,175,55,.35))}
 nav{display:flex;gap:4px}
 nav button{background:none;border:none;color:var(--muted);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;text-transform:uppercase;padding:6px 12px;border-radius:var(--r);cursor:pointer;transition:all .15s}
 nav button:hover{color:var(--text);background:var(--s2)}
@@ -41,7 +42,7 @@ nav button.active{color:var(--text);background:var(--s3);border:1px solid var(--
 .page-title{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;line-height:1}
 .page-sub{font-size:12px;color:var(--muted);margin-top:3px}
 .btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--r);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border:none;transition:all .15s;white-space:nowrap}
-.btn-primary{background:var(--cf);color:#fff}.btn-primary:hover{background:#c4007a}
+.btn-primary{background:var(--cf);color:#fff}.btn-primary:hover{background:#b8923a}
 .btn-ghost{background:none;border:1px solid var(--b2);color:var(--dim)}.btn-ghost:hover{border-color:var(--muted);color:var(--text)}
 .btn-green{background:#1a7a1a;color:#fff}.btn-green:hover{background:#1d9c1d}
 .btn-sm{padding:4px 10px;font-size:9px}
@@ -65,12 +66,12 @@ nav button.active{color:var(--text);background:var(--s3);border:1px solid var(--
 .tag-warmup{background:rgba(255,200,0,.12);color:var(--warmup)}
 .tag-gymnastic{background:rgba(0,255,180,.1);color:var(--gym)}
 .tag-weightlifting{background:rgba(180,100,255,.12);color:var(--wl)}
-.tag-wod{background:rgba(233,30,140,.12);color:var(--wod)}
+.tag-wod{background:rgba(212,175,55,.12);color:var(--wod)}
 .tag-conditioning{background:rgba(0,194,255,.1);color:var(--cond)}
 .tag-accesorios{background:rgba(184,255,0,.08);color:var(--ac)}
 .card-actions{display:flex;gap:4px;flex-shrink:0}
 .card-add-btn{background:var(--s3);border:1px solid var(--b2);color:var(--dim);font-size:11px;padding:3px 8px;border-radius:4px;cursor:pointer;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.5px;transition:all .15s;white-space:nowrap}
-.card-add-btn:hover{background:var(--cf);border-color:var(--cf);color:#fff;box-shadow:0 0 8px rgba(233,30,140,.4)}
+.card-add-btn:hover{background:var(--cf);border-color:var(--cf);color:#0c0c0a;box-shadow:0 0 8px rgba(212,175,55,.4)}
 .card-name{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:1px;margin-bottom:5px;line-height:1}
 .card-desc{font-size:11px;color:var(--dim);line-height:1.5;display:-webkit-box;-webkit-line-clamp:8;-webkit-box-orient:vertical;overflow:hidden;white-space:pre-wrap}
 .card-date{font-family:'DM Mono',monospace;font-size:9px;color:var(--dim);}
@@ -93,7 +94,7 @@ nav button.active{color:var(--text);background:var(--s3);border:1px solid var(--
 .plan-item[data-type="warmup"]{background:rgba(255,200,0,.08);border-color:var(--warmup)}
 .plan-item[data-type="gymnastic"]{background:rgba(0,255,180,.06);border-color:var(--gym)}
 .plan-item[data-type="weightlifting"]{background:rgba(180,100,255,.08);border-color:var(--wl)}
-.plan-item[data-type="wod"]{background:rgba(233,30,140,.08);border-color:var(--wod)}
+.plan-item[data-type="wod"]{background:rgba(212,175,55,.08);border-color:var(--wod)}
 .plan-item[data-type="conditioning"]{background:rgba(0,194,255,.07);border-color:var(--cond)}
 .plan-item[data-type="accesorios"]{background:rgba(184,255,0,.06);border-color:var(--ac)}
 .plan-name{font-weight:500;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -160,10 +161,10 @@ nav button.active{color:var(--text);background:var(--s3);border:1px solid var(--
 .plan-item{position:relative}
 .plan-item-actions{display:flex;gap:2px;flex-shrink:0;align-items:center}
 .plan-edit-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;padding:1px 4px;border-radius:3px;line-height:1;transition:all .15s}
-.plan-edit-btn:hover{color:var(--cf);background:rgba(233,30,140,.1)}
+.plan-edit-btn:hover{color:var(--cf);background:rgba(212,175,55,.1)}
 .plan-drag{cursor:grab;color:var(--muted);font-size:11px;padding:1px 3px;user-select:none}
 .plan-drag:active{cursor:grabbing}
-.day-free-btn{margin:0 6px 4px;padding:4px;background:none;border:1px dashed rgba(233,30,140,.3);color:rgba(233,30,140,.5);border-radius:4px;cursor:pointer;transition:all .15s;width:calc(100% - 12px);font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase}
+.day-free-btn{margin:0 6px 4px;padding:4px;background:none;border:1px dashed rgba(212,175,55,.3);color:rgba(212,175,55,.5);border-radius:4px;cursor:pointer;transition:all .15s;width:calc(100% - 12px);font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase}
 .day-free-btn:hover{border-color:var(--cf);color:var(--cf)}
 .plan-item.dragging{opacity:.4}
 .plan-item.drag-over{border-top:2px solid var(--cf)}
@@ -197,7 +198,7 @@ nav button.active{color:var(--text);background:var(--s3);border:1px solid var(--
 <body>
 
 <header class="no-print">
-  <div class="logo">MAMBA<span>FIT</span></div>
+  <img src="logo.png" alt="MAMBAFIT" class="logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="logo" style="display:none">MAMBA<span>FIT</span></div>
   <nav>
     <button class="active" onclick="showView('db',this)">Base de datos</button>
     <button onclick="showView('planner',this)">Planificación</button>
@@ -445,8 +446,8 @@ function uid() { return Math.random().toString(36).slice(2,10); }
 let currentType = 'all', currentSource = 'all', editingId = null, dbPage = 1;
 function typeLabel(t){return{wod:'WOD / CrossFit',conditioning:'K-Hybrid',accesorios:'Accesorios'}[t]||t;}
 const TYPE_EMOJI={warmup:'🔥',gymnastic:'🤸',weightlifting:'🏋️',wod:'⏱',conditioning:'🏃',accesorios:'💪'};
-const TYPE_COLOR_HEX={warmup:'#c4006a',gymnastic:'#a0005a',weightlifting:'#900060',wod:'#b0005a',conditioning:'#c0006f',accesorios:'#a8006a'};
-const TYPE_BG={warmup:'#fce8f3',gymnastic:'#fce0ef',weightlifting:'#f8e0f0',wod:'#fde0ef',conditioning:'#fce4f2',accesorios:'#fbe0ee'};
+const TYPE_COLOR_HEX={warmup:'#9c7f2e',gymnastic:'#8a7228',weightlifting:'#7d6824',wod:'#92792a',conditioning:'#a08a30',accesorios:'#8f7a2a'};
+const TYPE_BG={warmup:'#f7f0d8',gymnastic:'#f4ecd0',weightlifting:'#f0e6c8',wod:'#f5ecd0',conditioning:'#f6ecd2',accesorios:'#f3e8cc'};
 
 // ---- VIEW NAV ----
 function showView(v, btn, restoreScroll) {
@@ -509,7 +510,7 @@ function renderDB(){
           ${b.source&&b.source!=='Kalsubox'?`<div class="card-date" style="margin:0;color:var(--gym);border:1px solid var(--gym);padding:1px 4px;border-radius:3px">${b.source}</div>`:''}
         </div>
       </div>
-      ${b.timecap?`<div style="display:inline-flex;align-items:center;gap:4px;background:rgba(233,30,140,.1);border:1px solid rgba(233,30,140,.3);border-radius:4px;padding:2px 7px;font-family:'DM Mono',monospace;font-size:9px;color:var(--cf);letter-spacing:1px;margin-bottom:5px">⏱ TC ${b.timecap}</div>`:''}
+      ${b.timecap?`<div style="display:inline-flex;align-items:center;gap:4px;background:rgba(212,175,55,.1);border:1px solid rgba(212,175,55,.3);border-radius:4px;padding:2px 7px;font-family:'DM Mono',monospace;font-size:9px;color:var(--cf);letter-spacing:1px;margin-bottom:5px">⏱ TC ${b.timecap}</div>`:''}
       <div class="card-desc">${(b.desc||'').replace(/</g,'&lt;').slice(0,450)}</div>
     </div>
   `).join('');
@@ -538,7 +539,7 @@ function openDetail(id){
     <div class="drawer-name">${b.name}</div>
     <div class="drawer-meta">
       ${b.source_date?`<span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">${b.source_date}</span>`:''}
-      ${b.timecap?`<div style="display:inline-flex;align-items:center;gap:4px;background:rgba(233,30,140,.12);border:1px solid rgba(233,30,140,.3);border-radius:4px;padding:2px 8px;font-family:'DM Mono',monospace;font-size:10px;color:var(--cf)">⏱ TIME CAP ${b.timecap}</div>`:''}
+      ${b.timecap?`<div style="display:inline-flex;align-items:center;gap:4px;background:rgba(212,175,55,.12);border:1px solid rgba(212,175,55,.3);border-radius:4px;padding:2px 8px;font-family:'DM Mono',monospace;font-size:10px;color:var(--cf)">⏱ TIME CAP ${b.timecap}</div>`:''}
     </div>
     <div class="drawer-body">${(b.desc||'Sin contenido').replace(/</g,'&lt;')}</div>
     <div class="drawer-actions" style="flex-wrap:wrap;gap:6px">
@@ -714,7 +715,7 @@ function renderAddPanel(dayKey){
     <div class="pick-item" onclick="addToPlanFromPanel('${dayKey}','${b.id}')">
       <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:4px">
         <div class="pick-item-name">${b.name}</div>
-        ${b.timecap?`<span style="background:rgba(233,30,140,.12);color:var(--cf);font-family:'DM Mono',monospace;font-size:9px;padding:1px 6px;border-radius:3px">⏱ TC ${b.timecap}</span>`:''}
+        ${b.timecap?`<span style="background:rgba(212,175,55,.12);color:var(--cf);font-family:'DM Mono',monospace;font-size:9px;padding:1px 6px;border-radius:3px">⏱ TC ${b.timecap}</span>`:''}
       </div>
       <div style="display:flex;gap:4px;flex-shrink:0">
         ${b.source_date?`<div class="pick-item-sub">${b.source_date}</div>`:''}
@@ -757,12 +758,12 @@ function openPlanDetail(dayKey, idx){
   document.getElementById('drawer-inner').innerHTML=`
     <div class="drawer-tags">
       <span class="tag tag-${type}">${typeLabel(type)}</span>
-      ${hasEdits?`<span class="tag" style="background:rgba(233,30,140,.1);color:var(--cf)">Editado</span>`:''}
+      ${hasEdits?`<span class="tag" style="background:rgba(212,175,55,.1);color:var(--cf)">Editado</span>`:''}
     </div>
     <div class="drawer-name">${name}</div>
     <div class="drawer-meta">
       ${b&&b.source_date?`<span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">${b.source_date}</span>`:''}
-      ${tc?`<div style="display:inline-flex;align-items:center;gap:4px;background:rgba(233,30,140,.12);border:1px solid rgba(233,30,140,.3);border-radius:4px;padding:2px 8px;font-family:'DM Mono',monospace;font-size:10px;color:var(--cf)">⏱ TIME CAP ${tc}</div>`:''}
+      ${tc?`<div style="display:inline-flex;align-items:center;gap:4px;background:rgba(212,175,55,.12);border:1px solid rgba(212,175,55,.3);border-radius:4px;padding:2px 8px;font-family:'DM Mono',monospace;font-size:10px;color:var(--cf)">⏱ TIME CAP ${tc}</div>`:''}
     </div>
     <div class="drawer-body">${(desc||(b?b.desc:'')||'Sin contenido').replace(/</g,'&lt;')}</div>
     <div class="drawer-actions" style="flex-wrap:wrap;gap:6px">
@@ -893,7 +894,7 @@ function exportDay(dayKey,dateLabel){
         <div class="block-meta">
           <div class="block-type">${typeLabel(b.type)}</div>
           <div class="block-name">${b.name}</div>
-          ${b.timecap?`<div style="display:inline-flex;align-items:center;gap:4px;background:rgba(233,30,140,.15);border:1px solid rgba(233,30,140,.4);border-radius:4px;padding:2px 8px;font-size:10px;color:#b0005a;letter-spacing:.5px;margin-top:3px;font-weight:600">⏱ TIME CAP ${b.timecap}</div>`:''}
+          ${b.timecap?`<div style="display:inline-flex;align-items:center;gap:4px;background:rgba(212,175,55,.15);border:1px solid rgba(212,175,55,.4);border-radius:4px;padding:2px 8px;font-size:10px;color:#92792a;letter-spacing:.5px;margin-top:3px;font-weight:600">⏱ TIME CAP ${b.timecap}</div>`:''}
         </div>
       </div>
       <div class="block-body"><pre>${(b.desc||'Sin contenido').replace(/</g,'&lt;')}</pre></div>
@@ -905,10 +906,10 @@ function exportDay(dayKey,dateLabel){
 body{background:#fff;color:#111;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:0}
 @media print{.no-print{display:none!important}@page{margin:15mm}}
 .page{max-width:680px;margin:0 auto;padding:28px 20px}
-.doc-header{background:linear-gradient(135deg,#1a0010 0%,#3a0025 100%);color:#fff;padding:22px 24px;border-radius:10px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between}
+.doc-header{background:linear-gradient(135deg,#181408 0%,#2e2810 100%);color:#f0e6c0;padding:22px 24px;border-radius:10px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between}
 .doc-header h1{font-size:26px;font-weight:900;letter-spacing:2px;text-transform:uppercase;margin-bottom:3px}
 .doc-header p{font-size:11px;letter-spacing:1px;color:#cc88bb;text-transform:uppercase}
-.doc-badge{background:#e91e8c;color:#fff;font-size:10px;letter-spacing:1px;padding:5px 12px;border-radius:20px;text-transform:uppercase;white-space:nowrap}
+.doc-badge{background:#d4af37;color:#1a1606;font-size:10px;letter-spacing:1px;padding:5px 12px;border-radius:20px;text-transform:uppercase;white-space:nowrap}
 .summary{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
 .pill{background:#f5f5f5;border:1px solid #e0e0e0;border-radius:20px;padding:4px 10px;font-size:10px;letter-spacing:.5px;text-transform:uppercase;color:#555;display:flex;align-items:center;gap:4px}
 .block{margin-bottom:20px;border-radius:8px;overflow:hidden;border:1px solid #e8e8e8}
@@ -925,7 +926,7 @@ body{background:#fff;color:#111;font-family:-apple-system,BlinkMacSystemFont,'Se
 .conditioning .block-head{background:#e8f5ff}.conditioning .block-type{color:#0a6a9a}
 .accesorios .block-head{background:#f0ffe8}.accesorios .block-type{color:#3a6a0a}
 .footer{text-align:center;font-size:9px;color:#bbb;letter-spacing:1px;margin-top:28px;padding-top:14px;border-top:1px solid #eee;text-transform:uppercase}
-.print-btn{position:fixed;bottom:20px;right:20px;background:#e91e8c;color:#fff;border:none;padding:12px 20px;border-radius:8px;font-size:12px;letter-spacing:1px;cursor:pointer;text-transform:uppercase;box-shadow:0 4px 16px rgba(233,30,140,.4);font-weight:600}
+.print-btn{position:fixed;bottom:20px;right:20px;background:#d4af37;color:#1a1606;border:none;padding:12px 20px;border-radius:8px;font-size:12px;letter-spacing:1px;cursor:pointer;text-transform:uppercase;box-shadow:0 4px 16px rgba(212,175,55,.4);font-weight:600}
 </style></head><body>
 <div class="page">
   <div class="doc-header"><div><h1>Entrenamiento</h1><p>${dateLabel}</p></div><div class="doc-badge">${blocksData.length} bloque${blocksData.length!==1?'s':''}</div></div>

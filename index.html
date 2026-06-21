@@ -16,14 +16,14 @@
 :root{--bg:#0a0a0a;--surface:#121212;--s2:#1a1a1a;--s3:#222;--border:#2a2a2a;--b2:#333;--text:#f0f0f0;--muted:#666;--dim:#999;--cf:#d4af37;--hy:#00c2ff;--ac:#b8ff00;--warmup:#ffc800;--gym:#00ffb4;--wl:#b464ff;--wod:#d4af37;--cond:#00c2ff;--r:6px}
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;display:flex;flex-direction:column}
-header{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:52px;border-bottom:1px solid rgba(212,175,55,.25);background:linear-gradient(180deg,#1a1606 0%,#151310 100%);position:sticky;top:0;z-index:100}
+header{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:60px;border-bottom:1px solid rgba(212,175,55,.25);background:linear-gradient(180deg,#1a1606 0%,#151310 100%);position:sticky;top:0;z-index:100;overflow:visible}
 .logo{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;color:#f5f0e0}.logo span{color:var(--cf);text-shadow:0 0 12px rgba(212,175,55,.6)}
-.logo-img{height:38px;width:auto;display:block;filter:drop-shadow(0 0 6px rgba(212,175,55,.35))}
+.logo-img{height:46px;width:auto;display:block;mix-blend-mode:lighten;filter:drop-shadow(0 0 8px rgba(212,175,55,.4)) contrast(1.1)}
 nav{display:flex;gap:4px}
 nav button{background:none;border:none;color:var(--muted);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;text-transform:uppercase;padding:6px 12px;border-radius:var(--r);cursor:pointer;transition:all .15s}
 nav button:hover{color:var(--text);background:var(--s2)}
 nav button.active{color:var(--text);background:var(--s3);border:1px solid var(--b2)}
-.app{display:flex;flex:1;overflow:hidden;height:calc(100vh - 52px)}
+.app{display:flex;flex:1;overflow:hidden;height:calc(100vh - 60px)}
 .sidebar{width:220px;min-width:220px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto}
 .sb-section{padding:12px;border-bottom:1px solid var(--border)}
 .sb-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:8px}
@@ -183,6 +183,13 @@ nav button.active{color:var(--text);background:var(--s3);border:1px solid var(--
 .drawer-body{background:var(--s2);border:1px solid var(--border);border-radius:7px;padding:16px;font-size:13px;line-height:1.8;color:var(--dim);white-space:pre-wrap;margin-bottom:16px;word-break:break-word}
 .drawer-actions{display:flex;gap:8px}
 
+
+/* ---- SPLASH SCREEN ---- */
+#splash-screen{position:fixed;inset:0;background:#0c0c0a;z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .5s ease}
+#splash-screen.fade-out{opacity:0;pointer-events:none}
+#splash-screen img{max-width:65vw;max-height:50vh;width:auto;height:auto;mix-blend-mode:lighten;filter:drop-shadow(0 0 24px rgba(212,175,55,.4));animation:splashPulse 1.6s ease-in-out infinite}
+@keyframes splashPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.85;transform:scale(.98)}}
+
 /* ---- PRINT STYLES ---- */
 @media print{
   body{background:#fff;color:#000;font-family:'DM Sans',sans-serif}
@@ -197,8 +204,13 @@ nav button.active{color:var(--text);background:var(--s3);border:1px solid var(--
 </head>
 <body>
 
+<!-- SPLASH SCREEN -->
+<div id="splash-screen">
+  <img src="icon.png" alt="MAMBAFIT" onerror="this.style.display='none'">
+</div>
+
 <header class="no-print">
-  <img src="logo.png" alt="MAMBAFIT" class="logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="logo" style="display:none">MAMBA<span>FIT</span></div>
+  <img src="icon.png" alt="MAMBAFIT" class="logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="logo" style="display:none">MAMBA<span>FIT</span></div>
   <nav>
     <button class="active" onclick="showView('db',this)">Base de datos</button>
     <button onclick="showView('planner',this)">Planificación</button>
@@ -953,11 +965,20 @@ function showToast(msg){
 // ---- INIT ----
 document.getElementById('block-grid').innerHTML='<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:#666"><div style="font-size:32px;margin-bottom:12px">⏳</div><div style="font-family:DM Mono,monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase">Cargando...</div></div>';
 document.getElementById('db-count').textContent='Cargando...';
-if('requestIdleCallback' in window){
-  requestIdleCallback(()=>renderDB(),{timeout:1500});
-}else{
-  setTimeout(()=>renderDB(),80);
+function hideSplash(){
+  const splash = document.getElementById('splash-screen');
+  if(splash){
+    splash.classList.add('fade-out');
+    setTimeout(()=>splash.remove(), 600);
+  }
 }
+if('requestIdleCallback' in window){
+  requestIdleCallback(()=>{renderDB();hideSplash();},{timeout:1500});
+}else{
+  setTimeout(()=>{renderDB();hideSplash();},80);
+}
+// Failsafe: always hide splash after max 2.5s even if something stalls
+setTimeout(hideSplash, 2500);
 
 </script>
 </body>
